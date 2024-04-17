@@ -36,8 +36,28 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
+app.MapPost("/login", (LoginRequest request) =>
+{
+    // This is a simple example, in a real-world application you'd want to validate the credentials securely
+    var isValidUser = (request.Username == "test" && request.Password == "password");
+
+    if (isValidUser)
+    {
+        return Results.Ok(new { Message = "Login successful" });
+    }
+    else
+    {
+        return Results.BadRequest(new { Message = "Invalid username or password" });
+    }
+})
+.WithName("Login")
+.WithOpenApi();
+
+app.Run();
+
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
 
+public record LoginRequest(string Username, string Password);
